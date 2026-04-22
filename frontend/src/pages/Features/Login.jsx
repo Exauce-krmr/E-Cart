@@ -119,17 +119,26 @@ export default function Login({ navigate }) {
           <div style={{ flex: 1, height: 1, background: 'var(--gray-light)' }} />
         </div>
         <div style={{ display: 'flex', gap: 12 }}>
-          {[['🔴', 'Google'], ['🔵', 'Facebook']].map(([ico, label]) => (
-            <button key={label} style={{
-              flex: 1, padding: '11px', border: '2px solid var(--gray-light)', borderRadius: 12,
-              background: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 600,
-              display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
-              fontFamily: 'var(--font-body)', color: 'var(--charcoal)', transition: 'var(--transition)',
-            }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--saffron-light)'; e.currentTarget.style.background = 'var(--saffron-pale)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--gray-light)'; e.currentTarget.style.background = 'none'; }}
-            >{ico} {label}</button>
-          ))}
+          <a href="http://localhost:3000/api/auth/google" style={{
+            flex: 1, padding: '11px', border: '2px solid var(--gray-light)', borderRadius: 12,
+            background: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 600,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            fontFamily: 'var(--font-body)', color: 'var(--charcoal)', transition: 'var(--transition)',
+            textDecoration: 'none'
+          }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--saffron-light)'; e.currentTarget.style.background = 'var(--saffron-pale)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--gray-light)'; e.currentTarget.style.background = 'none'; }}
+          >🔴 Google</a>
+
+          <button style={{
+            flex: 1, padding: '11px', border: '2px solid var(--gray-light)', borderRadius: 12,
+            background: 'none', cursor: 'pointer', fontSize: 14, fontWeight: 600,
+            display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+            fontFamily: 'var(--font-body)', color: 'var(--charcoal)', transition: 'var(--transition)',
+          }}
+            onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--saffron-light)'; e.currentTarget.style.background = 'var(--saffron-pale)'; }}
+            onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--gray-light)'; e.currentTarget.style.background = 'none'; }}
+          >🔵 Facebook</button>
         </div>
 
         <p style={{ textAlign: 'center', marginTop: 28, fontSize: 14, color: 'var(--gray-mid)' }}>

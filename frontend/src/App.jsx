@@ -12,6 +12,7 @@ import Cart from './pages/Features/Cart';
 import Wishlist from './pages/Features/Wishlist';
 import SearchResults from './pages/Features/SearchResults';
 import OrdersPage from './pages/Features/OrdersPage';
+import OAuthSuccess from './pages/Features/OAuthSuccess';
 import './styles/global.css';
 
 // ── Simple client-side router ──────────────────────────────────────────────
@@ -25,7 +26,10 @@ const CATEGORY_KEYS = {
 };
 
 function AppShell() {
-  const [page, setPage] = useState({ route: '/', data: {} });
+  const [page, setPage] = useState({ 
+    route: window.location.pathname !== '/' && window.location.pathname !== '' ? window.location.pathname : '/', 
+    data: {} 
+  });
 
   const navigate = useCallback((route, data = {}) => {
     setPage({ route, data });
@@ -44,6 +48,7 @@ function AppShell() {
       case '/cart': return <Cart navigate={navigate} />;
       case '/wishlist': return <Wishlist navigate={navigate} />;
       case '/orders': return <OrdersPage navigate={navigate} />;
+      case '/auth/success': return <OAuthSuccess navigate={navigate} />;
       case '/profile': return <ProfilePage navigate={navigate} />;
       case '/track': return <TrackPage navigate={navigate} />;
       case '/about': return <AboutPage navigate={navigate} />;

@@ -11,8 +11,13 @@ const userSchema = new mongoose.Schema({
         unique: true,
     },
     password: {
+        type: String, // Made optional for OAuth users
+    },
+    googleId: {
         type: String,
-        required: true,
+    },
+    avatar: {
+        type: String,
     }
 }, {
     timestamps: true,

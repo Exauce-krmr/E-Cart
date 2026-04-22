@@ -2,10 +2,10 @@ const mongoose = require('mongoose');
 
 const orderItemSchema = new mongoose.Schema({
     id: { type: String, required: true },
-    title: { type: String, required: true },
+    name: { type: String, required: true },
     price: { type: Number, required: true },
-    quantity: { type: Number, default: 1 },
-    thumbnail: { type: String }
+    qty: { type: Number, default: 1 },
+    img: { type: String }
 }, { _id: false });
 
 const orderSchema = new mongoose.Schema({

@@ -11,6 +11,20 @@ const app = express();
 app.use(cors()); // Allow frontend to communicate with backend
 app.use(express.json()); // Parse JSON requests
 
+const session = require("express-session");
+const passport = require("./config/passport");
+
+app.use(
+  session({
+    secret: process.env.JWT_SECRET || "fallback_session_secret",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
