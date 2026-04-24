@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { AppProvider } from './context/AppContext';
+import { AppProvider, useApp } from './context/AppContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Toast from './components/Toast';
@@ -73,20 +73,39 @@ function AppShell() {
 
 // ── Simple placeholder pages ───────────────────────────────────────────────
 function ProfilePage({ navigate }) {
-  const { user } = { user: { name: 'Ishant Sharma', email: 'Ishant@example.com', phone: '9876543210' } };
+  const { user, logout } = useApp();
+
+  if (!user) {
+    return (
+      <main style={{ padding: '60px 24px', minHeight: '70vh', textAlign: 'center' }}>
+        <h2>You must be logged in to view this page.</h2>
+        <button onClick={() => navigate('/login')} className="btn-primary" style={{ marginTop: 20 }}>Go to Login</button>
+      </main>
+    );
+  }
+
+  // Generate initials
+  const initials = user.name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase();
+
   return (
     <main style={{ padding: '60px 24px', minHeight: '70vh' }}>
       <div style={{ maxWidth: 600, margin: '0 auto' }}>
-        <h1 style={{ fontSize: '2rem', color: 'var(--charcoal)', marginBottom: 32 }}>My Profile ⚙️</h1>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 32 }}>
+            <h1 style={{ fontSize: '2rem', color: 'var(--charcoal)' }}>My Profile ⚙️</h1>
+            <button onClick={() => { logout(); navigate('/login'); }} className="btn-o" style={{ borderColor: 'var(--error)', color: 'var(--error)' }}>🚪 Logout</button>
+        </div>
+        
         <div style={{ background: 'white', borderRadius: 20, padding: '32px', boxShadow: 'var(--shadow)', border: '1px solid rgba(249,115,22,0.10)' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 20, marginBottom: 32, flexWrap: 'wrap' }}>
-            <div style={{ width: 72, height: 72, background: 'var(--saffron)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, color: 'white', fontWeight: 700 }}>RS</div>
+            <div style={{ width: 72, height: 72, background: 'var(--saffron)', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, color: 'white', fontWeight: 700 }}>
+              {initials}
+            </div>
             <div>
-              <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--charcoal)' }}>Rahul Sharma</div>
-              <div style={{ color: 'var(--gray-mid)' }}>Member since January 2024</div>
+              <div style={{ fontSize: 22, fontWeight: 700, color: 'var(--charcoal)' }}>{user.name}</div>
+              <div style={{ color: 'var(--gray-mid)' }}>Member</div>
             </div>
           </div>
-          {[['👤 Full Name', 'Rahul Sharma'], ['📧 Email', 'rahul@example.com'], ['📱 Phone', '+91 9876543210'], ['📍 Address', '123 MG Road, Bengaluru, Karnataka']].map(([lbl, val]) => (
+          {[['👤 Full Name', user.name], ['📧 Email', user.email], ['🔑 User ID', user.id || 'N/A']].map(([lbl, val]) => (
             <div key={lbl} style={{ display: 'flex', justifyContent: 'space-between', padding: '14px 0', borderBottom: '1px solid var(--gray-light)', fontSize: 15 }}>
               <span style={{ color: 'var(--gray-mid)', fontWeight: 500 }}>{lbl}</span>
               <span style={{ fontWeight: 600, color: 'var(--charcoal)' }}>{val}</span>

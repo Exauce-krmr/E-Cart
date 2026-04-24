@@ -28,6 +28,10 @@ const orderSchema = new mongoose.Schema({
         type: Date,
         default: Date.now
     },
+    orderDateIST: {
+        type: String,
+        default: () => new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+    },
     status: {
         type: String,
         default: 'Processing'

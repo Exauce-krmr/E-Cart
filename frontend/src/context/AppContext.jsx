@@ -51,7 +51,7 @@ export function AppProvider({ children }) {
         if (resOrders.ok) {
           const data = await resOrders.json();
           const formattedOrders = data.map(o => ({
-            id: '#' + o.orderId.slice(-6),
+            id: '#' + (o._id || o.id || '').toString().slice(-6),
             date: o.orderDate,
             items: o.items,
             total: o.totalAmount,
@@ -148,7 +148,7 @@ export function AppProvider({ children }) {
       const orderData = await response.json();
 
       const newOrder = {
-        id: '#' + orderData.order.orderId.slice(-6),
+        id: '#' + (orderData.order._id || orderData.order.id || '').toString().slice(-6),
         date: orderData.order.orderDate,
         items,
         total,
