@@ -1,88 +1,117 @@
-# 🛒 e-cart — Full Stack E-Commerce App
+# 🛒 e-cart — Full Stack MERN E-Commerce App
 
-A production-ready, fully responsive React e-commerce application with a custom Node.js/Express backend. Features complete multi-page navigation, cart management, wishlist storage, authentication, and category filtering. Data is persistently stored using a lightweight JSON-file database.
+A production-ready, fully responsive full-stack e-commerce application built using the **MERN** stack (MongoDB, Express, React, Node.js). 
+
+Features complete multi-page navigation, cart management, wishlist storage, order history tracking, advanced authentication (JWT + Google OAuth), and seamless Cloudinary integration for image uploads.
 
 ---
 
-## 📁 Project Structure
+## 🛠️ Technologies Used
 
-The project has been scaled into a pristine Full Stack architecture with separated client and server codebases.
+### Frontend (Client)
+* **React + Vite**: For blazing-fast UI rendering and modern development experience.
+* **Context API**: For lightweight, robust global state management (handling carts, wishlists, and user sessions).
+* **Vanilla CSS**: For custom, high-performance styling using CSS variables and modern grid/flexbox layouts.
 
-```
+### Backend (Server)
+* **Node.js + Express**: Serves as the robust RESTful API backend handling all business logic.
+* **MongoDB + Mongoose**: A NoSQL database for secure, scalable data storage of Users, Orders, and Wishlists.
+* **JSON Web Tokens (JWT)**: Used for stateless, cryptographically secure user authentication across API requests.
+* **Passport.js + Google OAuth 2.0**: Enables seamless "Login with Google" capabilities, automatically registering users and generating native JWTs.
+* **Cloudinary + Multer**: Provides a robust, cloud-based image hosting infrastructure. Images uploaded to the `/api/upload` endpoint are piped directly into the Cloudinary CDN.
+
+---
+
+## 📁 Current Project Structure
+
+```text
 ecart/
-├── frontend/                     # React User Interface (Vite)
+├── frontend/                     # React User Interface
 │   ├── index.html
 │   ├── package.json
 │   └── src/
-│       ├── context/AppContext.jsx # Global State (Fetches & syncing data)
-│       ├── data/products.js       # Product catalog
-│       ├── pages/                 # Home, Cart, Login, OrdersPage, etc.
-│       └── components/            # Reusable UI (Navbar, ProductCard)
+│       ├── context/AppContext.jsx # Global State (Cart, Auth, Fetches)
+│       ├── data/products.js       # Local product catalog catalog
+│       ├── pages/                 # Home, Cart, Login, Orders, OAuthSuccess, etc.
+│       └── components/            # Reusable UI (Navbar, ProductCard, Footer)
 │
 └── backend/                      # Node.js + Express API
     ├── server.js                 # API Entry Point (Port 3000)
     ├── package.json
-    ├── data/
-    │   ├── login.json            # Persistent User Accounts database
-    │   ├── orders.json           # Persistent Checkout History database
-    │   └── wishlist.json         # Persistent User Favorites database
+    ├── .env                      # Environment Variables (Keys, Secrets)
     └── src/
-        ├── app.js                # Express App (CORS, JSON routing)
-        ├── routes/               # API endpoints (/auth, /orders, /wishlist)
-        └── controllers/          # Business logic handling file storage
+        ├── app.js                # Express App Setup (CORS, Middlewares)
+        ├── config/               # DB connection, Cloudinary, Passport strategies
+        ├── models/               # Mongoose Schemas (User, Order, Wishlist)
+        ├── routes/               # API endpoints (/auth, /orders, /upload, etc.)
+        ├── controllers/          # Core business logic for routes
+        └── middlewares/          # JWT Verification & Protection
 ```
 
 ---
 
-## ✅ Features
+## 🚀 How to Run the Project Locally
 
-### 💻 Backend API Documentation
-This project uses a custom Node.js and Express REST API. Instead of a database like MongoDB or SQL, the backend uses Node's native `fs` module to securely perform **CRUD (Create, Read, Update, Delete)** operations directly on local JSON files (`login.json`, `orders.json`, `wishlist.json`). This ensures full data persistence perfectly suited for standalone applications.
+### Prerequisites
+Make sure you have [Node.js](https://nodejs.org/) and [MongoDB](https://www.mongodb.com/try/download/community) installed on your machine.
 
-#### 1. Authentication API (`/api/auth`)
-- **`POST /api/auth/signup`**
-  - **Function**: Creates a new user account.
-  - **Body Payload**: `{ name, email, password }`
-  - **Logic**: Reads `login.json`, verifies the email is unique, generates a `Date.now()` unique user ID, and saves the new profile.
-- **`POST /api/auth/login`**
-  - **Function**: Authenticates an existing user.
-  - **Body Payload**: `{ email, password }`
-  - **Logic**: Scans `login.json` for a matching email and password. Returns the user object (sans password) back to the React Context.
+### 1. Clone & Install
+Open your terminal and install dependencies for both the frontend and backend.
+```bash
+# Install backend dependencies
+cd backend
+npm install
 
-#### 2. Checkout & Orders API (`/api/orders`)
-- **`POST /api/orders`**
-  - **Function**: Processes a new cart checkout and saves the order history.
-  - **Body Payload**: `{ userId, items, totalAmount }`
-  - **Logic**: Validates the `userId` exists, calculates the exact Indian Standard Time (IST) offset using JS Date methods, and stores the full order structure into `orders.json`.
-- **`GET /api/orders/:userId`**
-  - **Function**: Retrieves a user's entire order history.
-  - **Parameters**: `userId` (passed via the URL).
-  - **Logic**: Filters out all matching past orders and sends an array back to the React `OrdersPage` component.
+# Install frontend dependencies
+cd ../frontend
+npm install
+```
 
-#### 3. Favorites / Wishlist API (`/api/wishlist`)
-- **`POST /api/wishlist/toggle`**
-  - **Function**: A dynamic smart-endpoint that handles both **Update** and **Delete** operations simultaneously.
-  - **Body Payload**: `{ userId, product }`
-  - **Logic**: Checks `wishlist.json`. If the user has already favorited the item, it splices (deletes) it from the array. If the item is new, it pushes (creates) it.
-- **`GET /api/wishlist/:userId`**
-  - **Function**: Fetches the user's permanent favorites list from the server to immediately restore the red-heart UI states upon logging in.
+### 2. Environment Variables
+Create a `.env` file inside the `backend` folder and add your configuration secrets:
+```env
+PORT=3000
+MONGO_URI=mongodb://127.0.0.1:27017/ecart
+
+# Security
+JWT_SECRET=your_super_secret_jwt_key
+
+# Google OAuth
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# Cloudinary Image Hosting
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
+
+### 3. Start the Application
+You will need two separate terminal windows running simultaneously.
+
+**Terminal 1: Start the Backend Server**
+```bash
+cd backend
+npm run dev
+```
+*(Server runs on http://localhost:3000)*
+
+**Terminal 2: Start the Frontend React App**
+```bash
+cd frontend
+npm run dev
+```
+*(App runs on http://localhost:5173)*
+
+Open your browser to `http://localhost:5173` to start shopping!
 
 ---
 
-### 🎟️ Coupon Codes (Cart Page)
-| Code      | Discount |
-|-----------|----------|
-| ECART10   | 10% off  |
-| SAVE20    | 20% off  |
-| FIRST50   | 50% off  |
+## ✅ Features Overview
+
+* **Authentication API (`/api/auth`)**: Supports native email/password signup and seamless Google OAuth redirects.
+* **Orders API (`/api/orders`)**: Validates carts and securely saves chronological order history using MongoDB Object IDs.
+* **Wishlist API (`/api/wishlist`)**: Dynamic smart-endpoints that toggle products into a user's permanent MongoDB favorites array.
+* **Upload API (`/api/upload`)**: Secure `multipart/form-data` endpoint utilizing Multer to stream binary image data directly into Cloudinary.
 
 ---
-
-## 📱 Responsive Breakpoints
-- **Desktop**: Full multi-column layouts
-- **Tablet** (≤1024px): 2-column grids
-- **Mobile** (≤768px): Single column, hamburger nav, touch-friendly buttons
-
----
-
-Built with ❤️ by Ishant using React, Vite, Node.js, and Express
