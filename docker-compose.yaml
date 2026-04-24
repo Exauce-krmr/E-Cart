@@ -1,0 +1,20 @@
+services:
+  mongodb:
+    image: docker.io/mongo:7
+    container_name: mongodb-ct
+    volumes:
+      - ./db/data:/data/db
+  backend:
+    container_name: backend-ct
+    build: backend
+    ports:
+      - 3000:3000
+    depends_on:
+      - mongodb
+
+
+  frontend:
+    container_name: frontend-ct
+    build: frontend
+    ports:
+      - 8080:80
